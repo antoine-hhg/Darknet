@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darknet verstehen - Fakten & Aufklärung</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --secondary: #64748b;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --surface-light: #334155;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #475569;
+            --success: #10b981;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: rgba(15, 23, 42, 0.95);
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+        
+        .logo i {
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.8rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent);
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent);
+        }
+        
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.2rem;
+            color: var(--text);
+            font-weight: 800;
+        }
+        
+        .hero h1 span {
+            color: var(--primary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: var(--text-muted);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--surface);
+        }
+        
+        /* Content Sections */
+        section {
+            margin-bottom: 5rem;
+        }
+        
+        .section-title {
+            margin-bottom: 2.5rem;
+            color: var(--text);
+            font-size: 2rem;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+        
+        .section-title.center {
+            text-align: center;
+        }
+        
+        .section-title.center::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Myths vs Facts */
+        .myths-facts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .myth-card, .fact-card {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        
+        .myth-card:hover, .fact-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .myth-card {
+            border-left: 5px solid var(--danger);
+        }
+        
+        .fact-card {
+            border-left: 5px solid var(--success);
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.2rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .myth-card .card-title {
+            color: var(--danger);
+        }
+        
+        .fact-card .card-title {
+            color: var(--success);
+        }
+        
+        /* Layers Explanation */
+        .layers-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .layer-card {
+            background-color: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: transform 0.3s;
+        }
+        
+        .layer-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .layer-header {
+            padding: 1.5rem;
+            background-color: var(--surface-light);
+            color: var(--text);
+            font-weight: 600;
+            font-size: 1.3rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .layer-body {
+            padding: 1.5rem;
+        }
+        
+        .layer-body ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .layer-body li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .layer-body li:before {
+            content: "•";
+            color: var(--primary);
+            font-size: 1.2rem;
+            position: absolute;
+            left: 0;
+        }
+        
+        /* Stats */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        
+        /* Legal Info */
+        .legal-container {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+        
+        .warning-box {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left: 5px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        /* Content Box */
+        .content-box {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+        
+        /* FAQ Section */
+        .faq-container {
+            margin-top: 2rem;
+        }
+        
+        .faq-item {
+            background-color: var(--surface);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .faq-question:hover {
+            background-color: var(--surface-light);
+        }
+        
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 500px;
+        }
+        
+        .faq-icon {
+            transition: transform 0.3s;
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--surface);
+            color: var(--text-muted);
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1.2rem;
+            color: var(--text);
+            font-size: 1.3rem;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .myths-facts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--surface);
+                flex-direction: column;
+                padding: 1rem;
+                text-align: center;
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links a.active::after {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .layers-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-user-secret"></i>
+                    <span>Darknet verstehen</span>
+                </div>
+                <div class="mobile-toggle" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home" class="active">Start</a></li>
+                    <li><a href="#basics">Grundlagen</a></li>
+                    <li><a href="#myths">Mythen & Fakten</a></li>
+                    <li><a href="#layers">Internet-Schichten</a></li>
+                    <li><a href="#risks">Risiken & Recht</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Das <span>Darknet</span> verstehen</h1>
+            <p>Eine sachliche Aufklärung über das Darknet, seine Funktionen, Risiken und den Unterschied zu Deep Web und Clear Web. Entdecken Sie Fakten hinter den Mythen.</p>
+            <a href="#basics" class="btn">Grundlagen lernen</a>
+            <a href="#faq" class="btn btn-outline" style="margin-left: 12px;">Häufige Fragen</a>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Basics Section -->
+        <section id="basics">
+            <h2 class="section-title">Grundlagen des Darknets</h2>
+            
+            <div class="content-box">
+                <h3 style="margin-bottom: 1rem; color: var(--accent); display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-info-circle"></i> Was ist das Darknet?
+                </h3>
+                <p>Das Darknet ist ein Teil des Internets, der nicht über herkömmliche Suchmaschinen wie Google zugänglich ist. Es handelt sich um ein Overlay-Netzwerk, das spezielle Software zur Anonymität verwendet und durch Verschlüsselungstechniken die Identität der Nutzer schützt.</p>
+                
+                <div style="margin-top: 1.5rem;">
+                    <h4 style="color: var(--text); margin-bottom: 0.8rem;">Technische Grundlagen:</h4>
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li style="margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--primary);">•</span>
+                            <strong>Tor-Netzwerk:</strong> Das bekannteste Darknet, ursprünglich vom US-Militär entwickelt
+                        </li>
+                        <li style="margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--primary);">•</span>
+                            <strong>Onion-Routing:</strong> Daten werden durch mehrere Server geschichtet (wie eine Zwiebel)
+                        </li>
+                        <li style="margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--primary);">•</span>
+                            <strong>.onion-Domains:</strong> Spezielle Domains, die nur im Tor-Netzwerk erreichbar sind
+                        </li>
+                        <li style="margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--primary);">•</span>
+                            <strong>End-to-End-Verschlüsselung:</strong> Sichert die Kommunikation zwischen Sender und Empfänger
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="stats-container" style="margin-top: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-number">~6%</div>
+                    <div class="stat-label">des Internets ist Darknet</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2.5M</div>
+                    <div class="stat-label">tägliche Tor-Nutzer weltweit</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">90%+</div>
+                    <div class="stat-label">des Internets ist Deep Web</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">&lt;1%</div>
+                    <div class="stat-label">illegale Inhalte im Darknet</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Myths vs Facts -->
+        <section id="myths">
+            <h2 class="section-title">Mythen vs. Fakten über das Darknet</h2>
+            <div class="myths-facts-container">
+                <div class="myth-card">
+                    <div class="card-title">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Häufige Mythen</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 style="margin-bottom: 1rem; color: var(--danger);">"Das Darknet ist nur für Kriminelle"</h3>
+                        <p>Dies ist der häufigste und falscheste Mythos. Während das Darknet für illegale Aktivitäten genutzt wird, dient es vor allem legitimen Zwecken:</p>
+                        <ul style="list-style-type: none; padding-left: 0; margin-top: 0.8rem;">
+                            <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                                <span style="position: absolute; left: 0; color: var(--danger);">•</span>
+                                Schutz von Whistleblowern und Journalisten
+                            </li>
+                            <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                                <span style="position: absolute; left: 0; color: var(--danger);">•</span>
+                                Informationsaustausch in repressiven Regimen
+                            </li>
+                            <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                                <span style="position: absolute; left: 0; color: var(--danger);">•</span>
+                                Privater Austausch ohne kommerzielle Überwachung
+                            </li>
+                        </ul>
+                        
+                        <h3 style="margin: 1.5rem 0 0.8rem; color: var(--danger);">"Im Darknet ist alles illegal"</h3>
+                        <p>Studien zeigen, dass weniger als 1% der Darknet-Inhalte eindeutig illegal sind. Die meisten Seiten bieten legale Inhalte wie Diskussionsforen, Bibliotheken und Privatsphäre-Tools.</p>
+                    </div>
+                </div>
+                
+                <div class="fact-card">
+                    <div class="card-title">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Wichtige Fakten</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 style="margin-bottom: 1rem; color: var(--success);">Das Darknet ist ein Teil des Deep Web</h3>
+                        <p>Das Darknet ist ein kleiner, spezieller Teil des Deep Web, der spezielle Software (wie Tor) zum Zugriff benötigt. Das Deep Web umfasst alle nicht indexierten Seiten:</p>
+                        <ul style="list-style-type: none; padding-left: 0; margin-top: 0.8rem;">
+                            <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                                <span style="position: absolute; left: 0; color: var(--success);">•</span>
+                                Private Datenbanken und Intranets
+                            </li>
+                            <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                                <span style="position: absolute; left: 0; color: var(--success);">•</span>
+                                Passwortgeschützte Bereiche
+                            </li>
+                            <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                                <span style="position: absolute; left: 0; color: var(--success);">•</span>
+                                Wissenschaftliche Datenbanken
+                            </li>
+                            <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                                <span style="position: absolute; left: 0; color: var(--success);">•</span>
+                                Online-Banking und persönliche E-Mails
+                            </li>
+                        </ul>
+                        
+                        <h3 style="margin: 1.5rem 0 0.8rem; color: var(--success);">Anonymität hat legitime Gründe</h3>
+                        <p>Anonymität schützt nicht nur Kriminelle, sondern auch politisch Verfolgte, investigative Journalisten und Menschen in Überwachungsstaaten.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Internet Layers -->
+        <section id="layers">
+            <h2 class="section-title">Das Internet-Schichtenmodell</h2>
+            <p style="margin-bottom: 2rem; color: var(--text-muted);">Das Internet besteht aus verschiedenen Schichten, von denen das Darknet nur ein kleiner Teil ist. Hier eine Übersicht der drei Hauptebenen:</p>
+            
+            <div class="layers-container">
+                <div class="layer-card">
+                    <div class="layer-header">
+                        <i class="fas fa-globe" style="color: var(--accent);"></i>
+                        <span>Clear Web / Surface Web</span>
+                    </div>
+                    <div class="layer-body">
+                        <p>Das für alle zugängliche Internet, das über Suchmaschinen indexiert wird.</p>
+                        <ul>
+                            <li>Öffentliche Webseiten und Blogs</li>
+                            <li>Soziale Medien (öffentliche Profile)</li>
+                            <li>Nachrichtenseiten und Medien</li>
+                            <li>E-Commerce Plattformen</li>
+                            <li>Wikipedia und öffentliches Wissen</li>
+                            <li><strong>Nur ca. 4% des gesamten Internets</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="layer-card">
+                    <div class="layer-header">
+                        <i class="fas fa-water" style="color: var(--primary);"></i>
+                        <span>Deep Web</span>
+                    </div>
+                    <div class="layer-body">
+                        <p>Nicht indexierte Inhalte, die für die Öffentlichkeit nicht sichtbar sind.</p>
+                        <ul>
+                            <li>Private Datenbanken und Intranets</li>
+                            <li>Passwortgeschützte Bereiche</li>
+                            <li>Wissenschaftliche Datenbanken (Paywalls)</li>
+                            <li>Online-Banking und Finanztransaktionen</li>
+                            <li>Persönliche E-Mails und Cloud-Speicher</li>
+                            <li><strong>Ca. 90% des gesamten Internets</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="layer-card">
+                    <div class="layer-header">
+                        <i class="fas fa-mask" style="color: var(--warning);"></i>
+                        <span>Darknet</span>
+                    </div>
+                    <div class="layer-body">
+                        <p>Ein kleiner Teil des Deep Web, der spezielle Software für den Zugriff benötigt.</p>
+                        <ul>
+                            <li>Anonyme Netzwerke (Tor, I2P, Freenet)</li>
+                            <li>Benötigt spezielle Browser/Software</li>
+                            <li>Erhöhte Anonymität und Privatsphäre</li>
+                            <li>Sowohl legale als auch illegale Inhalte</li>
+                            <li>Whistleblower-Plattformen</li>
+                            <li><strong>Ca. 6% des gesamten Internets</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risks & Legal -->
+        <section id="risks">
+            <h2 class="section-title">Risiken & rechtliche Aspekte</h2>
+            
+            <div class="warning-box">
+                <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem; color: var(--warning);">
+                    <i class="fas fa-exclamation-triangle"></i> Wichtiger rechtlicher Hinweis
+                </h3>
+                <p>Das Betreten des Darknets ist in Deutschland und den meisten Ländern nicht strafbar. Allerdings sind viele Aktivitäten, die im Darknet stattfinden, illegal. Die Strafverfolgungsbehörden überwachen das Darknet aktiv und verfolgen Straftaten, die dort begangen werden.</p>
+            </div>
+            
+            <div class="content-box">
+                <h3 style="margin-bottom: 1.5rem; color: var(--text);">Häufige Risiken im Darknet</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div>
+                        <h4 style="color: var(--danger); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-bug"></i> Malware & Betrug
+                        </h4>
+                        <p>Häufigere Verbreitung von Schadsoftware, Phishing und Betrugsangeboten als im Clear Web. Viele Angebote sind Scams.</p>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: var(--danger); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-user-injured"></i> Identitätsdiebstahl
+                        </h4>
+                        <p>Persönliche Daten werden oft gehandelt und können für Identitätsdiebstahl verwendet werden. Auch IP-Adressen können geleakt werden.</p>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: var(--danger); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-balance-scale"></i> Rechtliche Konsequenzen
+                        </h4>
+                        <p>Illegale Käufe (Drogen, Waffen, gestohlene Daten) oder Downloads können zu strafrechtlicher Verfolgung führen.</p>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: var(--danger); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-shield-alt"></i> Sicherheitslücken
+                        </h4>
+                        <p>Anonymitätstools können Sicherheitslücken haben, die die Identität preisgeben. Auch Exit-Nodes können überwacht werden.</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                    <h4 style="color: var(--accent); margin-bottom: 1rem;">Legale Alternativen für mehr Privatsphäre</h4>
+                    <p>Für mehr Privatsphäre im Internet gibt es legale und sicherere Alternativen:</p>
+                    <ul style="list-style-type: none; padding-left: 0; margin-top: 0.8rem;">
+                        <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--accent);">•</span>
+                            <strong>VPN-Dienste:</strong> Verschleiern Ihre IP-Adresse
+                        </li>
+                        <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--accent);">•</span>
+                            <strong>Verschlüsselte Messenger:</strong> Signal, Telegram (Secret Chats)
+                        </li>
+                        <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--accent);">•</span>
+                            <strong>Privacy-Suchmaschinen:</strong> DuckDuckGo, Startpage
+                        </li>
+                        <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--accent);">•</span>
+                            <strong>Sichere E-Mail-Anbieter:</strong> ProtonMail, Tutanota
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq">
+            <h2 class="section-title center">Häufige Fragen (FAQ)</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Ist der Zugang zum Darknet illegal?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Nein, der Zugang zum Darknet selbst ist in den meisten Ländern, einschließlich Deutschland, nicht illegal. Was illegal ist, sind bestimmte Handlungen, die dort durchgeführt werden können – genau wie im "normalen" Internet. Der Besitz und die Nutzung von Tor oder ähnlicher Software ist legal.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Brauche ich besondere Software für das Darknet?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Ja, für den Zugang zum Darknet benötigen Sie spezielle Software. Die bekannteste ist der Tor-Browser, der eine modifizierte Version von Firefox ist. Es gibt auch andere Netzwerke wie I2P oder Freenet. Wichtig: Laden Sie solche Software nur von offiziellen Quellen herunter, um Malware zu vermeiden.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Kann ich im Darknet komplett anonym sein?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Das Darknet bietet eine erhöhte Anonymität, aber keine absolute. Fehler in der Konfiguration, Sicherheitslücken in der Software oder menschliches Versagen können die Anonymität gefährden. Auch Strafverfolgungsbehörden haben Methoden entwickelt, um bestimmte Aktivitäten zurückzuverfolgen.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Was sind legitime Nutzungen des Darknets?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Es gibt viele legitime Nutzungen: Journalisten in repressiven Regimen, Whistleblower, politisch Verfolgte, Menschen in Ländern mit Internet-Zensur, Forscher, die anonym Daten sammeln, oder einfach Menschen, die ihre Privatsphäre schützen wollen. Auch normale Webseiten bieten oft Tor-Mirror an.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Wie gefährlich ist das Darknet wirklich?</span>
+                        <i class="fas fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Das Gefahrenpotenzial ist höher als im Clear Web: Mehr Malware, mehr Betrug, und die Illegalität mancher Angebote birgt rechtliche Risiken. Für normale Nutzer ohne technisches Wissen wird vom Besuch abgeraten. Wenn, dann nur mit umfassenden Sicherheitsvorkehrungen und für legitime Zwecke.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Darknet verstehen</h3>
+                    <p>Eine informative Aufklärungsseite über das Darknet, seine Funktionen, Risiken und rechtlichen Aspekte. Diese Seite dient ausschließlich Bildungszwecken.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Wichtiger Hinweis</h3>
+                    <p>Diese Website ermutigt nicht zur Nutzung des Darknets. Sie dient der Aufklärung über Risiken, Mythen und Fakten. Illegale Aktivitäten bleiben in jedem Teil des Internets strafbar.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Weitere Informationen</h3>
+                    <p>Für vertiefende Informationen empfehlen wir die Webseiten des BSI (Bundesamt für Sicherheit in der Informationstechnik) und der Verbraucherzentralen.</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>© 2023 Darknet Aufklärung | Diese Seite dient ausschließlich Bildungs- und Informationszwecken.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation Toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // FAQ Toggle Functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Highlight active section in navigation
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 150;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
